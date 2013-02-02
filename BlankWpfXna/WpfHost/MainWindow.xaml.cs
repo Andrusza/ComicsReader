@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using XnaGuest;
+using Microsoft.Xna.Framework;
 
 namespace WpfHost
 {
@@ -20,11 +10,34 @@ namespace WpfHost
     /// </summary>
     public partial class MainWindow : Window
     {
-        MainGame mainGame;
+        private MainGame mainGame;
+
         public MainWindow()
         {
             InitializeComponent();
             mainGame = new MainGame(RenderingPanel);
+            RenderingPanel.Select();
+            RenderingPanel.MouseWheel += new System.Windows.Forms.MouseEventHandler(RenderingPanel_MouseWheel);
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            mainGame.UpdateLogo();
+        }
+
+        private void MainWindow_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            Console.WriteLine(e.Delta);
+        }
+
+        private void RenderingPanel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            mainGame.Vec += new Vector2(0, -10);
+        }
+
+        private void RenderingPanel_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            Console.WriteLine("Dasdas");
         }
     }
 }

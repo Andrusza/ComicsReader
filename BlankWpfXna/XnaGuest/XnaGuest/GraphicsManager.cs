@@ -5,21 +5,25 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XnaGuest
 {
-    class GraphicsManager
+    internal class GraphicsManager
     {
         private GraphicsDevice device;
         private Control parentControl;
         private PresentationParameters presentParams;
 
         public GraphicsDevice GraphicsDevice { get { return device; } }
+
         public Control ParentControl { get { return parentControl; } }
 
         public event EventHandler<EventArgs> Draw;
+
         public System.Drawing.Size Size { get { return parentControl.Size; } }
+
         public float AspectRation { get { return (float)Size.Width / (float)Size.Height; } }
+
         public Color BackgroundColor { get; set; }
 
-        Timer timer = new Timer();
+        private Timer timer = new Timer();
 
         public void Create(Control parentControl)
         {
@@ -37,12 +41,13 @@ namespace XnaGuest
             parentControl.Disposed += new EventHandler(OnDisposed);
             parentControl.SizeChanged += new EventHandler(OnSizeChanged);
             BackgroundColor = new Color(0.8f, 0.8f, 0.8f, 0);
-            timer.Interval = 1;
-            timer.Tick += new EventHandler(TimerTick);
-            timer.Enabled = true;
+            //timer.Interval = 1;
+            //timer.Tick += new EventHandler(TimerTick);
+            //timer.Enabled = true;
         }
 
         public event EventHandler<EventArgs> Update;
+
         public event EventHandler<EventArgs> SizeChanged;
 
         private void TimerTick(object sender, EventArgs e)

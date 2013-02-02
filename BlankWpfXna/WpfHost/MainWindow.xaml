@@ -2,18 +2,16 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wh="clr-namespace:WpfHost"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525" Name="Win_MainWindow" MouseWheel="MainWindow_MouseWheel">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+       
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <WindowsFormsHost Grid.Row="0" Grid.Column="0">
-            <wh:OptimizedPanel x:Name="RenderingPanel" />
+        <WindowsFormsHost Name="Form">
+            <wh:OptimizedPanel x:Name="RenderingPanel" MouseClick="RenderingPanel_MouseClick" />
         </WindowsFormsHost>
-        <TextBlock Text="Some WPF controls here" Grid.Row="1" Grid.Column="0" Margin="5"/>
+        
+        <Button Content="Button" Height="224" HorizontalAlignment="Left" Margin="12,12,0,0" Name="button1" VerticalAlignment="Top" Width="479" Click="button1_Click" />
     </Grid>
 </Window>
