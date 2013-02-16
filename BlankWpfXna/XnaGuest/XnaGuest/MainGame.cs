@@ -4,18 +4,24 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using XnaGuest.Image;
+using XnaGuest.Image.Vertex;
 
 namespace XnaGuest
 {
-    public class MainGame
+    public class MainGame : Game
     {
         private GraphicsManager gfx = new GraphicsManager();
+
+        internal GraphicsManager Gfx
+        {
+            get { return gfx; }
+            set { gfx = value; }
+        }
+
         private SpriteBatch spriteBatch;
-        private OwnTexture2D image;
+        private Texture2D image;
         private ReadArchive book;
-        private Vector2 rotationOfImageOffset = Vector2.Zero;
-        private float rotationOfImage = 0;
-        private Rectangle bounds = new Rectangle();
+        private Quad Image;
 
         public MainGame(Control parentControl)
         {
@@ -25,19 +31,20 @@ namespace XnaGuest
             spriteBatch = new SpriteBatch(gfx.GraphicsDevice);
 
             book = new ReadArchive("C:\\a.cbr");
-            UpdateImage(10);
-            Rotate(0);
-        }
+            Camera cam = new Camera();
+            Image = new Quad(this);
+            Image.Projection = cam.Projection;
+            cam.Attach(Image);
+            cam.View = Matrix.CreateLookAt(new Vector3(0, 0, 1280), Vector3.Zero, Vector3.Up);
 
-        private Vector2 origin;
+            UpdateImage(10);
+        }
 
         public void UpdateImage(int num_page)
         {
             System.Drawing.Image img = book.ReadPageFromRar(num_page);
-            ReadImage.Image2Texture(img, gfx.GraphicsDevice, ref image);
-            origin.X = image.Image.Width / 2;
-            origin.Y = image.Image.Height / 2;
-            rotationOfImageOffset = origin;
+            ReadImage.Image2Texture(img, Gfx.GraphicsDevice, ref image);
+            Image.Texture = image;
         }
 
         private Vector2 offset;
@@ -45,7 +52,7 @@ namespace XnaGuest
         public Vector2 ImageOffset
         {
             get { return offset; }
-            set { offset = value; gfx.Redraw(); Console.WriteLine(offset.ToString()); }
+            set { offset = value; Image.Translate(offset); Gfx.Redraw(); }
         }
 
         private float x = 0;
@@ -62,33 +69,9 @@ namespace XnaGuest
             FrameworkDispatcher.Update();
         }
 
-        public void Rotate(float angleDegree)
-        {
-            rotationOfImage = MathHelper.ToRadians(angleDegree);
-            image.Corners.Rotation(angleDegree);
-        }
-
-        public void RotateWhenFit(float angleDegree)
-        {
-            rotationOfImage = MathHelper.ToRadians(angleDegree);
-            rotationOfImageOffset = Vector2.Transform(new Vector2(gfx.ParentControl.Width, gfx.ParentControl.Height), Matrix.CreateRotationZ(rotationOfImage));
-
-            rotationOfImageOffset.X = Math.Abs(rotationOfImageOffset.X);
-            rotationOfImageOffset.Y = Math.Abs(rotationOfImageOffset.Y);
-
-            origin.X = rotationOfImageOffset.X / 2;
-            origin.Y = rotationOfImageOffset.Y / 2;
-
-            bounds = new Rectangle(0, 0, (int)rotationOfImageOffset.X, (int)rotationOfImageOffset.Y);
-        }
-
         private void Draw(object sender, EventArgs e)
         {
-            Rotate(0);
-            spriteBatch.Begin();
-            spriteBatch.Draw(image.Image, offset, null, Color.Wheat, rotationOfImage, image.Corners.UpperRight, 1f, SpriteEffects.None, 0);
-            //spriteBatch.Draw(image, bounds, null, Color.Wheat, rotationOfImage, origin, SpriteEffects.None, 0);
-            spriteBatch.End();
+            Image.Draw();
         }
     }
 }

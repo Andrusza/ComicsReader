@@ -20,7 +20,7 @@ namespace WpfHost
 
         private void RenderingPanel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            int offset = e.Delta / 10;
+            float offset = (float)e.Delta / 200f;
             mainGame.ImageOffset += new Vector2(0, offset);
         }
 
@@ -61,7 +61,6 @@ namespace WpfHost
         private void RenderingPanel_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.WindowStyle = WindowStyle.None;
-            this.Topmost = true;
             this.WindowState = WindowState.Maximized;
         }
 
@@ -70,7 +69,6 @@ namespace WpfHost
             if (e.KeyCode == Keys.Escape)
             {
                 this.WindowStyle = WindowStyle.SingleBorderWindow;
-                this.Topmost = true;
                 this.Width = Screen.PrimaryScreen.Bounds.Width;
                 this.Height = Screen.PrimaryScreen.Bounds.Height;
                 this.WindowState = WindowState.Normal;
