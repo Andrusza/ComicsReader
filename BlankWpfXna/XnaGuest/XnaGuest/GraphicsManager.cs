@@ -41,9 +41,9 @@ namespace XnaGuest
             parentControl.Disposed += new EventHandler(OnDisposed);
             parentControl.SizeChanged += new EventHandler(OnSizeChanged);
             BackgroundColor = new Color(0.8f, 0.8f, 0.8f, 0);
-            //timer.Interval = 1;
-            //timer.Tick += new EventHandler(TimerTick);
-            //timer.Enabled = true;
+            timer.Interval = 1;
+            timer.Tick += new EventHandler(TimerTick);
+            timer.Enabled = true;
         }
 
         public event EventHandler<EventArgs> Update;
@@ -73,6 +73,7 @@ namespace XnaGuest
                 return;
             presentParams.BackBufferWidth = parentControl.ClientSize.Width;
             presentParams.BackBufferHeight = parentControl.ClientSize.Height;
+
             device.Reset(presentParams);
             parentControl.Invalidate();
             if (SizeChanged != null)
