@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace WpfHost
@@ -18,7 +16,6 @@ namespace WpfHost
             {
                 foreach (string f in Directory.GetFiles(d, "*.*"))
                 {
-
                     if (mediaExtensions.Contains(Path.GetExtension(f).ToLower()))
                         filesFound.Add(f);
                 }

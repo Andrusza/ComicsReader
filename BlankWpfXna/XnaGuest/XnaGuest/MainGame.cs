@@ -22,6 +22,7 @@ namespace XnaGuest
         private Texture2D image;
         private ReadArchive book;
         private Quad Image;
+        private Camera cam = new Camera();
 
         public MainGame(Control parentControl)
         {
@@ -31,11 +32,7 @@ namespace XnaGuest
             spriteBatch = new SpriteBatch(gfx.GraphicsDevice);
 
             book = new ReadArchive("C:\\a.cbr");
-            Camera cam = new Camera();
-            Image = new Quad(this);
-            Image.Projection = cam.Projection;
-            cam.Attach(Image);
-            cam.View = Matrix.CreateLookAt(new Vector3(0, 0, 1280), Vector3.Zero, Vector3.Up);
+            cam.ModelMatrix = Matrix.CreateLookAt(new Vector3(0, 0, 1), Vector3.Zero, Vector3.Up);
 
             UpdateImage(10);
         }
@@ -44,7 +41,8 @@ namespace XnaGuest
         {
             System.Drawing.Image img = book.ReadPageFromRar(num_page);
             ReadImage.Image2Texture(img, Gfx.GraphicsDevice, ref image);
-            Image.Texture = image;
+            Image = new Quad(gfx.GraphicsDevice, image);
+            cam.Attach(Image);
         }
 
         private Vector2 offset;
@@ -52,7 +50,7 @@ namespace XnaGuest
         public Vector2 ImageOffset
         {
             get { return offset; }
-            set { offset = value; Image.Translate(offset); Gfx.Redraw(); }
+            set { offset = value; cam.Translate(offset, -1); Gfx.Redraw(); }
         }
 
         private float x = 0;
@@ -60,7 +58,6 @@ namespace XnaGuest
         private void Input()
         {
             MouseState mouseState = Mouse.GetState();
-            x += 0.5f;
         }
 
         private void Update(object sender, EventArgs e)

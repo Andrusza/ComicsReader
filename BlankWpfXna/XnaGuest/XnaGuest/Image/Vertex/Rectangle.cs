@@ -3,16 +3,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XnaGuest.Image.Vertex
 {
-    public class Quad : Geometry,IObserver
+    public class Quad : Geometry, IObserver
     {
         private BasicEffect effect;
 
         private VertexBuffer vertexBuffer;
         private GraphicsDevice device;
 
-        public Quad(MainGame game)
+        public Quad(GraphicsDevice device, Texture2D tex)
         {
-            device = game.Gfx.GraphicsDevice;
+            this.device = device;
+            effect = new BasicEffect(device);
+            this.Texture = tex;
+            this.Projection = Camera.Projection;
             Initialize();
         }
 
@@ -37,7 +40,6 @@ namespace XnaGuest.Image.Vertex
         public void Draw()
         {
             device.SetVertexBuffer(vertexBuffer, 0);
-            effect.World = ModelMatrix;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
@@ -48,13 +50,16 @@ namespace XnaGuest.Image.Vertex
 
         public void Initialize()
         {
+            int halfHeight = Texture.Height / 2;
+            int halfWidth = Texture.Width / 2;
+
             VertexPositionTexture[] verts = new VertexPositionTexture[6];
-            verts[0] = new VertexPositionTexture(new Vector3(-650, 995, 0), new Vector2(0, 0));
-            verts[1] = new VertexPositionTexture(new Vector3(650, 995, 0), new Vector2(1, 0));
-            verts[2] = new VertexPositionTexture(new Vector3(-650, -995, 0), new Vector2(0, 1));
+            verts[0] = new VertexPositionTexture(new Vector3(-halfWidth, halfHeight, 0), new Vector2(0, 0));
+            verts[1] = new VertexPositionTexture(new Vector3(halfWidth, halfHeight, 0), new Vector2(1, 0));
+            verts[2] = new VertexPositionTexture(new Vector3(-halfWidth, -halfHeight, 0), new Vector2(0, 1));
 
             verts[3] = verts[1];
-            verts[4] = new VertexPositionTexture(new Vector3(650, -955, 0), new Vector2(1, 1));
+            verts[4] = new VertexPositionTexture(new Vector3(halfWidth, -halfHeight, 0), new Vector2(1, 1));
             verts[5] = verts[2];
 
             vertexBuffer = new VertexBuffer(device,
@@ -64,13 +69,12 @@ namespace XnaGuest.Image.Vertex
 
             vertexBuffer.SetData(verts);
 
-            effect = new BasicEffect(device);
             effect.TextureEnabled = true;
         }
 
         public void Update(Camera cam)
         {
-            View = cam.View;
+            View = cam.ModelMatrix;
         }
     }
 }

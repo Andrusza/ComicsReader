@@ -9,7 +9,7 @@ namespace XnaGuest.Image.Vertex
         private Matrix translationMatrix = Matrix.Identity;
         private Matrix modelMatrix = Matrix.Identity;
 
-        public Matrix ModelMatrix
+        public virtual Matrix ModelMatrix
         {
             get { return modelMatrix; }
             set { modelMatrix = value; }
@@ -44,7 +44,12 @@ namespace XnaGuest.Image.Vertex
             TranslationMatrix = Matrix.CreateTranslation(vec.X, vec.Y, 0);
         }
 
-        public void Trnaslate(float x, float y)
+        public void Translate(Vector2 vec,float zoom)
+        {
+            TranslationMatrix = Matrix.CreateTranslation(vec.X, vec.Y, zoom);
+        }
+
+        public void Translate(float x, float y)
         {
             TranslationMatrix = Matrix.CreateTranslation(x, y, 0);
         }

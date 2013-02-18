@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using XnaGuest;
@@ -20,11 +21,10 @@ namespace WpfHost
 
         private void RenderingPanel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            float offset = (float)e.Delta / 200f;
+            float offset = (float)e.Delta / 10f;
             mainGame.ImageOffset += new Vector2(0, offset);
         }
 
-        private int[] position = new int[2];
         private int[] oldPosition = new int[2];
         private int[] offset = new int[2];
 
@@ -43,18 +43,14 @@ namespace WpfHost
         {
             if (e.Button == MouseButtons.Left)
             {
-                offset[0] = -(oldPosition[0] - e.X);
-                offset[1] = -(oldPosition[1] - e.Y);
+                offset[0] = (e.X - oldPosition[0]);
+                offset[1] = (e.Y - oldPosition[1]);
 
                 oldPosition[0] = e.X;
                 oldPosition[1] = e.Y;
+               
 
-                mainGame.ImageOffset += new Vector2(offset[0], offset[1]);
-            }
-            else
-            {
-                position[0] = e.X;
-                position[1] = e.Y;
+                mainGame.ImageOffset += new Vector2(offset[0], -offset[1]);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using XnaGuest.Image.Vertex;
+using System.Windows.Forms;
 
 namespace XnaGuest.Image
 {
@@ -11,18 +12,10 @@ namespace XnaGuest.Image
 
     public class Camera : Geometry
     {
-        private Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 4.0f / 3.0f, 0.01f, 5000f);
-        private Matrix view;
+        private static Matrix projection = Matrix.CreateOrthographic(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, 0.1f, 1000f);
         private List<IObserver> quads = new List<IObserver>();
 
-        public Camera(Vector3 position)
-        {
-            view = Matrix.CreateLookAt(position, Vector3.Zero, Vector3.Up);
-        }
-
-        public Camera()
-        {
-        }
+        public Camera() { }
 
         public void Attach(IObserver obj)
         {
@@ -37,16 +30,22 @@ namespace XnaGuest.Image
             }
         }
 
-        public Matrix Projection
+        public static Matrix Projection
         {
             get { return projection; }
             set { projection = value; }
         }
 
-        public Matrix View
+        public override Matrix ModelMatrix
         {
-            get { return view; }
-            set { view = value; Notify(); }
+            get
+            {
+                return base.ModelMatrix;
+            }
+            set
+            {
+                base.ModelMatrix = value; Notify();
+            }
         }
     }
 }
