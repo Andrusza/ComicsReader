@@ -12,37 +12,37 @@ namespace XnaGuest
     {
         private GraphicsManager gfx = new GraphicsManager();
 
-        internal GraphicsManager Gfx
+        private GraphicsManager Gfx
         {
             get { return gfx; }
             set { gfx = value; }
         }
 
-        private SpriteBatch spriteBatch;
-        private Texture2D image;
         private ReadArchive book;
-        private Quad Image;
-        private Camera cam = new Camera();
+        private Quad image;
+        private Camera camera = new Camera();
 
         public MainGame(Control parentControl)
         {
             gfx.Create(parentControl);
             gfx.Draw += new EventHandler<EventArgs>(Draw);
             gfx.Update += new EventHandler<EventArgs>(Update);
-            spriteBatch = new SpriteBatch(gfx.GraphicsDevice);
 
             book = new ReadArchive("C:\\a.cbr");
-            cam.ModelMatrix = Matrix.CreateLookAt(new Vector3(0, 0, 1), Vector3.Zero, Vector3.Up);
 
-            UpdateImage(10);
+            UpdateImage(125);
         }
 
         public void UpdateImage(int num_page)
         {
-            System.Drawing.Image img = book.ReadPageFromRar(num_page);
-            ReadImage.Image2Texture(img, Gfx.GraphicsDevice, ref image);
-            Image = new Quad(gfx.GraphicsDevice, image);
-            cam.Attach(Image);
+            System.Drawing.Image bitmap = book.ReadPageFromRar(num_page);
+            Texture2D texture = ReadImage.Image2Texture(bitmap, Gfx.GraphicsDevice);
+
+            image = new Quad(gfx.GraphicsDevice, texture);
+            camera.Attach(image);
+            camera.AligCameraToCorner(Corner.UpperLeft, image,270);
+            offset = new Vector2(camera.ModelMatrix.Translation.X,camera.ModelMatrix.Translation.Y);
+            
         }
 
         private Vector2 offset;
@@ -50,10 +50,8 @@ namespace XnaGuest
         public Vector2 ImageOffset
         {
             get { return offset; }
-            set { offset = value; cam.Translate(offset, -1); Gfx.Redraw(); }
+            set { offset = value; camera.Translate(offset); Gfx.Redraw(); }
         }
-
-        private float x = 0;
 
         private void Input()
         {
@@ -66,9 +64,11 @@ namespace XnaGuest
             FrameworkDispatcher.Update();
         }
 
+        float x = 0;
         private void Draw(object sender, EventArgs e)
         {
-            Image.Draw();
+           
+            image.Draw();
         }
     }
 }

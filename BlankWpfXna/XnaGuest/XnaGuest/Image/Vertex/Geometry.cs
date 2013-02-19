@@ -15,19 +15,19 @@ namespace XnaGuest.Image.Vertex
             set { modelMatrix = value; }
         }
 
-        public Matrix RotationMatrix
+        protected Matrix RotationMatrix
         {
             get { return rotationMatrix; }
             set { rotationMatrix = value; Update(); }
         }
 
-        public Matrix ScaleMatrix
+        protected Matrix ScaleMatrix
         {
             get { return scaleMatrix; }
             set { scaleMatrix = value; Update(); }
         }
 
-        public Matrix TranslationMatrix
+        protected Matrix TranslationMatrix
         {
             get { return translationMatrix; }
             set { translationMatrix = value; Update(); }
@@ -37,26 +37,38 @@ namespace XnaGuest.Image.Vertex
         {
             angleDegree = MathHelper.ToRadians(angleDegree);
             RotationMatrix = Matrix.CreateRotationZ(angleDegree);
+            Bounds.Rotation(RotationMatrix);
         }
 
         public void Translate(Vector2 vec)
         {
             TranslationMatrix = Matrix.CreateTranslation(vec.X, vec.Y, 0);
+            Bounds.Translate(vec);
         }
 
-        public void Translate(Vector2 vec,float zoom)
-        {
-            TranslationMatrix = Matrix.CreateTranslation(vec.X, vec.Y, zoom);
-        }
+        //public void TranslateAndZoom(Vector2 vec, float zoom)
+        //{
+        //    TranslationMatrix = Matrix.CreateTranslation(-vec.X, -vec.Y, 0);
+        //    ScaleMatrix = Matrix.CreateScale(zoom);
+        //}
 
-        public void Translate(float x, float y)
-        {
-            TranslationMatrix = Matrix.CreateTranslation(x, y, 0);
-        }
+        //public void Translate(float x, float y)
+        //{
+        //    TranslationMatrix = Matrix.CreateTranslation(-x, -y, 0);
+        //}
 
         private void Update()
         {
             ModelMatrix = scaleMatrix * rotationMatrix * translationMatrix;
         }
+
+        protected Corners bounds;
+
+        public Corners Bounds
+        {
+            get { return bounds; }
+        }
+
+        protected abstract void SetBounds();
     }
 }

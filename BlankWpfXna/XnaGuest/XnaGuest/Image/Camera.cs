@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using XnaGuest.Image.Vertex;
-using System.Windows.Forms;
 
 namespace XnaGuest.Image
 {
@@ -10,19 +10,22 @@ namespace XnaGuest.Image
         void Update(Camera cam);
     }
 
-    public class Camera : Geometry
+    public partial class Camera : Geometry
     {
-        private static Matrix projection = Matrix.CreateOrthographic(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, 0.1f, 1000f);
+        private static Matrix projection = Matrix.CreateOrthographic(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, 0.0f, 10f);
         private List<IObserver> quads = new List<IObserver>();
 
-        public Camera() { }
+        public Camera()
+        {
+            SetBounds();
+        }
 
         public void Attach(IObserver obj)
         {
             quads.Add(obj);
         }
 
-        public void Notify()
+        private void Notify()
         {
             foreach (IObserver obj in quads)
             {
@@ -47,5 +50,7 @@ namespace XnaGuest.Image
                 base.ModelMatrix = value; Notify();
             }
         }
+
+      
     }
 }

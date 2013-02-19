@@ -15,8 +15,10 @@ namespace XnaGuest.Image.Vertex
             this.device = device;
             effect = new BasicEffect(device);
             this.Texture = tex;
+            this.effect.TextureEnabled = true;
             this.Projection = Camera.Projection;
             Initialize();
+            SetBounds();
         }
 
         public Matrix View
@@ -39,8 +41,6 @@ namespace XnaGuest.Image.Vertex
 
         public void Draw()
         {
-            device.SetVertexBuffer(vertexBuffer, 0);
-
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -68,13 +68,17 @@ namespace XnaGuest.Image.Vertex
                                             BufferUsage.WriteOnly);
 
             vertexBuffer.SetData(verts);
-
-            effect.TextureEnabled = true;
+            device.SetVertexBuffer(vertexBuffer, 0);
         }
 
         public void Update(Camera cam)
         {
             View = cam.ModelMatrix;
+        }
+
+        protected override void SetBounds()
+        {
+            bounds = new Corners(ModelMatrix.Translation, Texture.Width, Texture.Height);
         }
     }
 }
